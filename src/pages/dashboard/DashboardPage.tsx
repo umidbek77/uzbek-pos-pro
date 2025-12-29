@@ -142,7 +142,7 @@ const DashboardPage: React.FC = () => {
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" fontWeight={700} gutterBottom>
-          {t('dashboard.welcome')}, {profile?.full_name?.split(' ')[0] || 'User'}! 👋
+          {t('dashboard.welcome')}, {profile?.full_name?.split(' ')[0] || 'User'}!
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Here's what's happening with your store today.

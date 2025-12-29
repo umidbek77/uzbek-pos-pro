@@ -18,6 +18,22 @@ import AuthPage from '@/pages/auth/AuthPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
 import NotFound from '@/pages/NotFound';
 
+// New Pages
+import BranchesPage from '@/pages/branches/BranchesPage';
+import BrandsPage from '@/pages/brands/BrandsPage';
+import CategoriesPage from '@/pages/categories/CategoriesPage';
+import SuppliersPage from '@/pages/suppliers/SuppliersPage';
+import ProductsPage from "@/pages/products/ProductsPage.tsx";
+import SettingsPage from "@/pages/settings/SettingsPage.tsx";
+import CustomersPage from "@/pages/customers/CustomersPage.tsx";
+import TransactionsPage from "@/pages/transactions/TransactionsPage.tsx";
+import InventoryPage from "@/pages/inventory/InventoryPage.tsx";
+import ReportsPage from "@/pages/reports/ReportsPage.tsx";
+import UsersPage from "@/pages/users/UsersPage.tsx";
+import ProfilePage from "@/pages/profile/ProfilePage.tsx";
+import PosPage from "@/pages/pos/PosPage.tsx";
+
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -51,19 +67,19 @@ const AppContent: React.FC = () => {
             }
           >
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/pos" element={<div>POS Terminal - Coming Soon</div>} />
-            <Route path="/products" element={<div>Products - Coming Soon</div>} />
-            <Route path="/categories" element={<div>Categories - Coming Soon</div>} />
-            <Route path="/brands" element={<div>Brands - Coming Soon</div>} />
-            <Route path="/suppliers" element={<div>Suppliers - Coming Soon</div>} />
-            <Route path="/inventory" element={<div>Inventory - Coming Soon</div>} />
-            <Route path="/customers" element={<div>Customers - Coming Soon</div>} />
-            <Route path="/transactions" element={<div>Transactions - Coming Soon</div>} />
-            <Route path="/reports" element={<div>Reports - Coming Soon</div>} />
-            <Route path="/branches" element={<div>Branches - Coming Soon</div>} />
-            <Route path="/users" element={<div>Users - Coming Soon</div>} />
-            <Route path="/settings" element={<div>Settings - Coming Soon</div>} />
-            <Route path="/profile" element={<div>Profile - Coming Soon</div>} />
+              <Route path="/products" element={<ProductsPage />} />
+              <Route path="/categories" element={<CategoriesPage />} />
+              <Route path="/branches" element={<BranchesPage />} />
+              <Route path="/brands" element={<BrandsPage />} />
+              <Route path="/suppliers" element={<SuppliersPage />} />
+              <Route path="/customers" element={<CustomersPage />} />
+              <Route path="/transactions" element={<TransactionsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/inventory" element={<InventoryPage />} />
+              <Route path="/reports" element={<ReportsPage />} />
+              <Route path="/users" element={<UsersPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/pos" element={<PosPage />} />
           </Route>
           
           {/* Redirects */}

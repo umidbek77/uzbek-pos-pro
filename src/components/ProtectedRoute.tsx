@@ -30,9 +30,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/auth" state={{ from: location }} replace />;
-  }
+  // if (!isAuthenticated) {
+  //   return <Navigate to="/auth" state={{ from: location }} replace />;
+  // }
 
   if (requiredRoles && requiredRoles.length > 0 && !hasAnyRole(requiredRoles)) {
     return <Navigate to="/dashboard" replace />;
