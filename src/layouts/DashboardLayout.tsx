@@ -289,7 +289,7 @@ const DashboardLayout: React.FC = () => {
     const drawer = (
         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <Toolbar sx={{ justifyContent: 'space-between', px: 2 }}>
-                <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 700 }}>
+                <Typography variant="h3" noWrap component="div" sx={{ fontWeight: 700, color: ICON_COLOR }}>
                     {t('common.appName')}
                 </Typography>
                 {isMobile && (

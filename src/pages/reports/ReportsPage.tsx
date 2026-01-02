@@ -323,16 +323,32 @@ const ReportsPage: React.FC = () => {
         {t('nav.reports', 'Reports')}
       </Typography>
 
-      {/* Tabs */}
-      <Paper sx={{ mb: 3 }}>
-        <Tabs value={activeTab} onChange={(_, v) => setActiveTab(v)}>
-          <Tab label={t('reports.shiftReports', 'Shift Reports')} icon={<ReceiptIcon />} iconPosition="start" />
-          <Tab label={t('reports.financialAudit', 'Financial Audit')} icon={<ReportIcon />} iconPosition="start" />
-          <Tab label={t('reports.stockValuation', 'Stock Valuation')} icon={<InventoryIcon />} iconPosition="start" />
-        </Tabs>
-      </Paper>
+        {/* Tabs */}
+        <Paper sx={{ mb: 3 }}>
+            <Tabs
+                value={activeTab}
+                onChange={(_, v) => setActiveTab(v)}
+                variant="fullWidth"
+            >
+                <Tab
+                    label={t('reports.shiftReports', 'Shift Reports')}
+                    icon={<ReceiptIcon />}
+                    iconPosition="start"
+                />
+                <Tab
+                    label={t('reports.financialAudit', 'Financial Audit')}
+                    icon={<ReportIcon />}
+                    iconPosition="start"
+                />
+                <Tab
+                    label={t('reports.stockValuation', 'Stock Valuation')}
+                    icon={<InventoryIcon />}
+                    iconPosition="start"
+                />
+            </Tabs>
+        </Paper>
 
-      {/* Stats Overview */}
+        {/* Stats Overview */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
         {stats.map((stat, index) => (
           <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={index}>
