@@ -96,7 +96,9 @@
     "recentTransactions": "Последние транзакции",
     "salesTrend": "Тренд продаж",
     "lowStock": "Мало на складе",
-    "quickActions": "Быстрые действия"
+    "quickActions": "Быстрые действия",
+    "monthlyProfit": "Прибыль за месяц",
+    "subtitle": "Вот что происходит в вашем магазине сегодня."
   },
   "pos": {
     "title": "POS Терминал",
