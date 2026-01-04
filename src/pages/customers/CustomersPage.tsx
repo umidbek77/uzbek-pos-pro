@@ -44,7 +44,9 @@ import {
   Phone as PhoneIcon,
   Email as EmailIcon,
   Cake as CakeIcon,
+  Edit as AdjustIcon,
 } from '@mui/icons-material';
+import CashbackAdjustment from '@/components/customers/CashbackAdjustment';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -320,6 +322,8 @@ const CustomersPageContent: React.FC = () => {
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [tierFilter, setTierFilter] = useState<LoyaltyTier | 'all'>('all');
+  const [adjustmentDialogOpen, setAdjustmentDialogOpen] = useState(false);
+  const [adjustingCustomer, setAdjustingCustomer] = useState<Customer | null>(null);
 
   // Queries
   const { data: customers, isLoading, refetch } = useCustomers();
@@ -498,8 +502,17 @@ const CustomersPageContent: React.FC = () => {
       field: 'actions',
       type: 'actions',
       headerName: t('common.actions'),
-      width: 100,
+      width: 140,
       getActions: (params) => [
+        <GridActionsCellItem
+          icon={<WalletIcon />}
+          label="Adjust Cashback"
+          onClick={() => {
+            setAdjustingCustomer(params.row as Customer);
+            setAdjustmentDialogOpen(true);
+          }}
+          showInMenu
+        />,
         <GridActionsCellItem
           icon={<EditIcon />}
           label="Edit"
@@ -761,6 +774,16 @@ const CustomersPageContent: React.FC = () => {
           />
         )}
       </Drawer>
+
+      {/* Cashback Adjustment Dialog */}
+      <CashbackAdjustment
+        open={adjustmentDialogOpen}
+        onClose={() => {
+          setAdjustmentDialogOpen(false);
+          setAdjustingCustomer(null);
+        }}
+        customer={adjustingCustomer}
+      />
     </Box>
   );
 };

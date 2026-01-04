@@ -53,6 +53,9 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  PieChart,
+  Pie,
+  Cell,
 } from 'recharts';
 import { format, subDays, startOfMonth, endOfMonth } from 'date-fns';
 
@@ -67,6 +70,8 @@ import {
   useTopProducts,
   useStockPredictions,
   useRecentTransactions,
+  useRevenueByCategory,
+  usePeakHours,
 } from '@/hooks/useAnalytics';
 import { useTopCustomers } from '@/hooks/useCustomers';
 
@@ -167,6 +172,11 @@ const DashboardPage: React.FC = () => {
   const { data: stockPredictions, isLoading: loadingPredictions } = useStockPredictions(currentBranch?.id);
   const { data: recentTransactions, isLoading: loadingTransactions } = useRecentTransactions(5, currentBranch?.id);
   const { data: topCustomers, isLoading: loadingCustomers } = useTopCustomers(3);
+  const { data: categoryRevenue, isLoading: loadingCategory } = useRevenueByCategory(monthStart, monthEnd, currentBranch?.id);
+  const { data: peakHours, isLoading: loadingPeakHours } = usePeakHours(7, currentBranch?.id);
+
+  // Pie chart colors
+  const PIE_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
 
   // Stats
   const stats = [
@@ -427,6 +437,90 @@ const DashboardPage: React.FC = () => {
               ) : (
                 <Box sx={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Typography color="text.secondary">{t('dashboard.noSalesYet', 'No sales recorded today')}</Typography>
+                </Box>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* Category Revenue & Peak Hours */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* Revenue by Category Pie Chart */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" fontWeight={600} gutterBottom>
+                {t('dashboard.revenueByCategory', 'Revenue by Category')}
+              </Typography>
+              {loadingCategory ? (
+                <Skeleton variant="rectangular" height={280} />
+              ) : categoryRevenue && categoryRevenue.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <PieChart>
+                    <Pie
+                      data={categoryRevenue.slice(0, 6)}
+                      dataKey="revenue"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                    >
+                      {categoryRevenue.slice(0, 6).map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value: number) => [formatPrice(value), t('dashboard.revenue', 'Revenue')]} />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <Box sx={{ height: 280, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Typography color="text.secondary">{t('dashboard.noData', 'No data available')}</Typography>
+                </Box>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Peak Hours */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" fontWeight={600} gutterBottom>
+                {t('dashboard.peakHours', 'Peak Hours (Last 7 Days)')}
+              </Typography>
+              {loadingPeakHours ? (
+                <Skeleton variant="rectangular" height={280} />
+              ) : peakHours ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={peakHours.filter(h => h.orderCount > 0)}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="label" />
+                    <YAxis />
+                    <Tooltip 
+                      formatter={(value: number, name: string) => [
+                        name === 'orderCount' ? `${value} orders` : formatPrice(value),
+                        name === 'orderCount' ? t('dashboard.orders', 'Orders') : t('dashboard.sales', 'Sales')
+                      ]}
+                    />
+                    <Bar 
+                      dataKey="orderCount" 
+                      fill={theme.palette.primary.main}
+                      radius={[4, 4, 0, 0]}
+                    >
+                      {peakHours.filter(h => h.orderCount > 0).map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.isPeak ? theme.palette.warning.main : theme.palette.primary.main} 
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <Box sx={{ height: 280, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Typography color="text.secondary">{t('dashboard.noData', 'No data available')}</Typography>
                 </Box>
               )}
             </CardContent>
