@@ -96,7 +96,16 @@
     "recentTransactions": "Последние транзакции",
     "salesTrend": "Тренд продаж",
     "lowStock": "Мало на складе",
-    "quickActions": "Быстрые действия"
+    "quickActions": "Быстрые действия",
+    "monthlyProfit": "Прибыль за месяц",
+    "subtitle": "Вот что происходит в вашем магазине сегодня.",
+    "revenueByCategory": "Выручка по категориям",
+    "peakHours": "Часы пик (последние 7 дней)",
+    "orders": "Заказы",
+    "revenue": "Выручка",
+    "profit": "Прибыль",
+    "sales": "Продажи",
+    "noData": "Нет данных"
   },
   "pos": {
     "title": "POS Терминал",
@@ -121,7 +130,16 @@
     "remove": "Удалить",
     "cashback": "Кэшбэк",
     "useCashback": "Использовать кэшбэк",
-    "availableCashback": "Доступный кэшбэк"
+    "availableCashback": "Доступный кэшбэк",
+    "selectCustomer": "Выбрать клиента",
+    "searchCustomerPlaceholder": "Поиск по имени или телефону...",
+    "noCustomersFound": "Клиенты не найдены",
+    "addNewCustomer": "Добавить нового клиента",
+    "quickAddCustomer": "Быстро добавить клиента",
+    "typeToSearch": "Введите минимум 2 символа для поиска",
+    "applyingCashback": "Применяется",
+    "max": "МАКС",
+    "noCashbackAvailable": "Кэшбэк недоступен"
   },
   "payment": {
     "title": "Оплата",
@@ -252,7 +270,18 @@
     "vip": "VIP",
     "purchaseHistory": "История покупок",
     "customerCreated": "Клиент создан успешно",
-    "customerUpdated": "Клиент обновлён успешно"
+    "customerUpdated": "Клиент обновлён успешно",
+    "adjustCashback": "Корректировка кэшбэка",
+    "currentBalance": "Текущий баланс",
+    "addCashback": "Добавить кэшбэк",
+    "deductCashback": "Вычесть кэшбэк",
+    "amount": "Сумма",
+    "reason": "Причина / Заметки",
+    "reasonPlaceholder": "напр., Компенсация, Ручная корректировка и т.д.",
+    "newBalance": "Новый баланс",
+    "cashbackAdjusted": "Кэшбэк успешно скорректирован",
+    "invalidAmount": "Введите корректную сумму",
+    "insufficientBalance": "Сумма превышает текущий баланс"
   },
   "transactions": {
     "title": "Транзакции",

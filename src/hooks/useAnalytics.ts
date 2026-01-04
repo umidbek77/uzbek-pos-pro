@@ -439,6 +439,59 @@ export function useStockPredictions(branchId?: string) {
     },
   });
 }
+export function useRevenueByCategory(startDate: Date, endDate: Date, branchId?: string) {
+  return useQuery({
+    queryKey: ['analytics', 'revenue-by-category', startDate.toISOString(), endDate.toISOString(), branchId],
+    queryFn: async () => {
+      let query = supabase
+        .from('transaction_items')
+        .select(`
+          product_id,
+          total_amount,
+          products!inner (
+            category_id,
+            categories (
+              id,
+              name
+            )
+          ),
+          transactions!inner (
+            created_at,
+            status,
+            branch_id
+          )
+        `)
+        .gte('transactions.created_at', startOfDay(startDate).toISOString())
+        .lte('transactions.created_at', endOfDay(endDate).toISOString())
+        .eq('transactions.status', 'completed');
+      
+      if (branchId) {
+        query = query.eq('transactions.branch_id', branchId);
+      }
+      
+      const { data, error } = await query;
+      if (error) throw error;
+      
+      // Aggregate by category
+      const categoryMap = new Map<string, { name: string; revenue: number }>();
+      
+      data?.forEach((item: any) => {
+        const categoryId = item.products?.category_id || 'uncategorized';
+        const categoryName = item.products?.categories?.name || 'Uncategorized';
+        
+        if (!categoryMap.has(categoryId)) {
+          categoryMap.set(categoryId, { name: categoryName, revenue: 0 });
+        }
+        
+        categoryMap.get(categoryId)!.revenue += Number(item.total_amount) || 0;
+      });
+      
+      return Array.from(categoryMap.entries())
+        .map(([id, data]) => ({ categoryId: id, ...data }))
+        .sort((a, b) => b.revenue - a.revenue);
+    },
+  });
+}
 
 // Recent transactions
 export function useRecentTransactions(limit: number = 10, branchId?: string) {
@@ -468,6 +521,58 @@ export function useRecentTransactions(limit: number = 10, branchId?: string) {
       const { data, error } = await query;
       if (error) throw error;
       return data;
+    },
+  });
+}
+
+// Peak hours analysis
+export function usePeakHours(days: number = 7, branchId?: string) {
+  return useQuery({
+    queryKey: ['analytics', 'peak-hours', days, branchId],
+    queryFn: async () => {
+      const endDate = new Date();
+      const startDate = subDays(endDate, days);
+      
+      let query = supabase
+        .from('transactions')
+        .select('created_at, total_amount')
+        .gte('created_at', startOfDay(startDate).toISOString())
+        .lte('created_at', endOfDay(endDate).toISOString())
+        .eq('status', 'completed');
+      
+      if (branchId) {
+        query = query.eq('branch_id', branchId);
+      }
+      
+      const { data, error } = await query;
+      if (error) throw error;
+      
+      // Initialize hourly buckets
+      const hourlyData = Array.from({ length: 24 }, (_, i) => ({
+        hour: i,
+        label: `${i.toString().padStart(2, '0')}:00`,
+        totalSales: 0,
+        orderCount: 0,
+        avgOrderValue: 0,
+      }));
+      
+      data?.forEach(tx => {
+        const hour = getHours(new Date(tx.created_at!));
+        hourlyData[hour].totalSales += Number(tx.total_amount) || 0;
+        hourlyData[hour].orderCount += 1;
+      });
+      
+      // Calculate averages and find peak
+      hourlyData.forEach(h => {
+        h.avgOrderValue = h.orderCount > 0 ? h.totalSales / h.orderCount : 0;
+      });
+      
+      const maxOrders = Math.max(...hourlyData.map(h => h.orderCount));
+      
+      return hourlyData.map(h => ({
+        ...h,
+        isPeak: h.orderCount > 0 && h.orderCount >= maxOrders * 0.8,
+      }));
     },
   });
 }

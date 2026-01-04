@@ -96,7 +96,16 @@
     "recentTransactions": "Recent Transactions",
     "salesTrend": "Sales Trend",
     "lowStock": "Low Stock Alerts",
-    "quickActions": "Quick Actions"
+    "quickActions": "Quick Actions",
+    "monthlyProfit": "Monthly Profit",
+    "subtitle": "Here's what's happening with your store today.",
+    "revenueByCategory": "Revenue by Category",
+    "peakHours": "Peak Hours (Last 7 Days)",
+    "orders": "Orders",
+    "revenue": "Revenue",
+    "profit": "Profit",
+    "sales": "Sales",
+    "noData": "No data available"
   },
   "pos": {
     "title": "POS Terminal",
@@ -121,7 +130,16 @@
     "remove": "Remove",
     "cashback": "Cashback",
     "useCashback": "Use Cashback",
-    "availableCashback": "Available Cashback"
+    "availableCashback": "Available Cashback",
+    "selectCustomer": "Select Customer",
+    "searchCustomerPlaceholder": "Search by name or phone...",
+    "noCustomersFound": "No customers found",
+    "addNewCustomer": "Add New Customer",
+    "quickAddCustomer": "Quick Add Customer",
+    "typeToSearch": "Type at least 2 characters to search",
+    "applyingCashback": "Applying",
+    "max": "MAX",
+    "noCashbackAvailable": "No cashback available"
   },
   "payment": {
     "title": "Payment",
@@ -252,7 +270,18 @@
     "vip": "VIP",
     "purchaseHistory": "Purchase History",
     "customerCreated": "Customer created successfully",
-    "customerUpdated": "Customer updated successfully"
+    "customerUpdated": "Customer updated successfully",
+    "adjustCashback": "Adjust Cashback",
+    "currentBalance": "Current Balance",
+    "addCashback": "Add Cashback",
+    "deductCashback": "Deduct Cashback",
+    "amount": "Amount",
+    "reason": "Reason / Notes",
+    "reasonPlaceholder": "e.g., Compensation, Manual adjustment, etc.",
+    "newBalance": "New Balance",
+    "cashbackAdjusted": "Cashback adjusted successfully",
+    "invalidAmount": "Please enter a valid amount",
+    "insufficientBalance": "Amount exceeds current balance"
   },
   "transactions": {
     "title": "Transactions",

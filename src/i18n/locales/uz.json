@@ -96,7 +96,16 @@
     "recentTransactions": "So'nggi tranzaksiyalar",
     "salesTrend": "Sotuvlar trendi",
     "lowStock": "Kam qoldiq",
-    "quickActions": "Tez amallar"
+    "quickActions": "Tez amallar",
+    "monthlyProfit": "Oylik foyda",
+    "subtitle": "Bugun do'koningizda nima sodir bo'lmoqda.",
+    "revenueByCategory": "Kategoriya bo'yicha daromad",
+    "peakHours": "Eng band soatlar (so'nggi 7 kun)",
+    "orders": "Buyurtmalar",
+    "revenue": "Daromad",
+    "profit": "Foyda",
+    "sales": "Sotuvlar",
+    "noData": "Ma'lumot yo'q"
   },
   "pos": {
     "title": "POS Terminal",
@@ -121,7 +130,16 @@
     "remove": "O'chirish",
     "cashback": "Keshbek",
     "useCashback": "Keshbekdan foydalanish",
-    "availableCashback": "Mavjud keshbek"
+    "availableCashback": "Mavjud keshbek",
+    "selectCustomer": "Mijoz tanlash",
+    "searchCustomerPlaceholder": "Ism yoki telefon bo'yicha qidiring...",
+    "noCustomersFound": "Mijozlar topilmadi",
+    "addNewCustomer": "Yangi mijoz qo'shish",
+    "quickAddCustomer": "Tez mijoz qo'shish",
+    "typeToSearch": "Qidirish uchun kamida 2 ta belgi kiriting",
+    "applyingCashback": "Qo'llanilmoqda",
+    "max": "MAKS",
+    "noCashbackAvailable": "Keshbek mavjud emas"
   },
   "payment": {
     "title": "To'lov",
@@ -252,7 +270,18 @@
     "vip": "VIP",
     "purchaseHistory": "Xaridlar tarixi",
     "customerCreated": "Mijoz muvaffaqiyatli yaratildi",
-    "customerUpdated": "Mijoz muvaffaqiyatli yangilandi"
+    "customerUpdated": "Mijoz muvaffaqiyatli yangilandi",
+    "adjustCashback": "Keshbekni sozlash",
+    "currentBalance": "Joriy balans",
+    "addCashback": "Keshbek qo'shish",
+    "deductCashback": "Keshbek ayirish",
+    "amount": "Summa",
+    "reason": "Sabab / Izoh",
+    "reasonPlaceholder": "masalan, Kompensatsiya, Qo'lda sozlash va h.k.",
+    "newBalance": "Yangi balans",
+    "cashbackAdjusted": "Keshbek muvaffaqiyatli sozlandi",
+    "invalidAmount": "To'g'ri summa kiriting",
+    "insufficientBalance": "Summa joriy balansdan oshib ketdi"
   },
   "transactions": {
     "title": "Tranzaksiyalar",

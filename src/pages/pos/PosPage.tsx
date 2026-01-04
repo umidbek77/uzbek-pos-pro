@@ -78,7 +78,11 @@ import {
   PaymentMethod,
 } from '@/hooks/useTransactions';
 import ThermalReceipt from '@/components/pos/ThermalReceipt';
+import CustomerSelector from '@/components/pos/CustomerSelector';
+import LoyaltyPanel from '@/components/pos/LoyaltyPanel';
+import type { Database } from '@/integrations/supabase/types';
 
+type Customer = Database['public']['Tables']['customers']['Row'];
 type ViewMode = 'scanner' | 'grid';
 
 interface PaymentEntry {
@@ -111,6 +115,7 @@ const POSPage: React.FC = () => {
   const [cashReceived, setCashReceived] = useState<number>(0);
   const [completedTransaction, setCompletedTransaction] = useState<any>(null);
   const [receiptDialogOpen, setReceiptDialogOpen] = useState(false);
+  const [customerDialogOpen, setCustomerDialogOpen] = useState(false);
 
   // Barcode scanner ref
   const barcodeInputRef = useRef<HTMLInputElement>(null);
@@ -706,6 +711,32 @@ const POSPage: React.FC = () => {
                 )}
               </Box>
 
+              {/* Customer Section */}
+              {!cartStore.customer ? (
+                <Button
+                  variant="outlined"
+                  startIcon={<PersonIcon />}
+                  onClick={() => setCustomerDialogOpen(true)}
+                  sx={{ mb: 2 }}
+                  fullWidth
+                >
+                  {t('pos.addCustomer', 'Add Customer')}
+                </Button>
+              ) : (
+                <LoyaltyPanel
+                  customer={cartStore.customer as any}
+                  useCashback={cartStore.useCashback}
+                  cashbackAmount={cartStore.cashbackAmount}
+                  maxCashback={cartStore.subtotal()}
+                  onToggleCashback={(use) => {
+                    cartStore.setUseCashback(use);
+                    if (!use) cartStore.setCashbackAmount(0);
+                  }}
+                  onCashbackAmountChange={(amount) => cartStore.setCashbackAmount(amount)}
+                  onRemoveCustomer={() => cartStore.setCustomer(null)}
+                />
+              )}
+
               {/* Cart Items */}
               {cartStore.items.length > 0 ? (
                 <>
@@ -1181,6 +1212,22 @@ const POSPage: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Customer Selector Dialog */}
+      <CustomerSelector
+        open={customerDialogOpen}
+        onClose={() => setCustomerDialogOpen(false)}
+        onSelect={(customer) => {
+          cartStore.setCustomer({
+            id: customer.id,
+            full_name: customer.full_name,
+            phone: customer.phone,
+            cashback_balance: Number(customer.cashback_balance) || 0,
+            loyalty_tier: customer.loyalty_tier || 'bronze',
+          });
+          setCustomerDialogOpen(false);
+        }}
+      />
     </Box>
   );
 };
