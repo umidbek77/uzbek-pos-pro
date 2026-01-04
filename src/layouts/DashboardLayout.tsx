@@ -304,9 +304,16 @@ const DashboardLayout: React.FC = () => {
                         return (
                             <React.Fragment key={item.key}>
                                 <ListItem disablePadding>
-                                    <ListItemButton onClick={() => handleMenuToggle(item.key)}>
+                                    <ListItemButton onClick={() => handleMenuToggle(item.key)} >
                                         <ListItemIcon>{item.icon}</ListItemIcon>
-                                        <ListItemText primary={t(`nav.${item.key}`)} />
+                                        <ListItemText primary={t(`nav.${item.key}`)} slotProps={{
+                                            primary: {
+                                                sx: {
+                                                    fontWeight: 600,
+                                                    color: ICON_COLOR,
+                                                },
+                                            },
+                                        }} />
                                         {openMenus[item.key] ? <ExpandLess /> : <ExpandMore />}
                                     </ListItemButton>
                                 </ListItem>
@@ -317,12 +324,27 @@ const DashboardLayout: React.FC = () => {
                                             return (
                                                 <ListItemButton
                                                     key={child.key}
-                                                    sx={{ pl: 4 }}
+                                                    sx={{ pl: 4,
+                                                        '& .MuiTypography-root': {
+                                                            fontWeight: 600,
+                                                            color: ICON_COLOR,
+                                                        },
+                                                        '&.Mui-selected .MuiTypography-root': {
+                                                            fontWeight: 700,
+                                                            color: ICON_COLOR,
+                                                        },}}
                                                     selected={isActive(child.path!)}
                                                     onClick={() => handleNavigation(child.path!)}
                                                 >
                                                     <ListItemIcon>{child.icon}</ListItemIcon>
-                                                    <ListItemText primary={t(`nav.${child.key}`)} />
+                                                    <ListItemText primary={t(`nav.${child.key}`)} slotProps={{
+                                                        primary: {
+                                                            sx: {
+                                                                fontWeight: 600,
+                                                                color: ICON_COLOR,
+                                                            },
+                                                        },
+                                                    }} />
                                                 </ListItemButton>
                                             );
                                         })}
@@ -336,10 +358,27 @@ const DashboardLayout: React.FC = () => {
                         <ListItem key={item.key} disablePadding>
                             <ListItemButton
                                 selected={isActive(item.path!)}
+                                sx={{
+                                    '& .MuiTypography-root': {
+                                        fontWeight: 600,
+                                        color: ICON_COLOR,
+                                    },
+                                    '&.Mui-selected .MuiTypography-root': {
+                                        fontWeight: 700,
+                                        color: ICON_COLOR,
+                                    },
+                                }}
                                 onClick={() => handleNavigation(item.path!)}
                             >
                                 <ListItemIcon>{item.icon}</ListItemIcon>
-                                <ListItemText primary={t(`nav.${item.key}`)} />
+                                <ListItemText primary={t(`nav.${item.key}`)} slotProps={{
+                                    primary: {
+                                        sx: {
+                                            fontWeight: 600,
+                                            color: ICON_COLOR,
+                                        },
+                                    },
+                                }} />
                             </ListItemButton>
                         </ListItem>
                     );
