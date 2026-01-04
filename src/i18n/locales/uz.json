@@ -96,7 +96,9 @@
     "recentTransactions": "So'nggi tranzaksiyalar",
     "salesTrend": "Sotuvlar trendi",
     "lowStock": "Kam qoldiq",
-    "quickActions": "Tez amallar"
+    "quickActions": "Tez amallar",
+    "monthlyProfit": "Oylik foyda",
+    "subtitle": "Bugun do'koningizda nima sodir bo'lmoqda."
   },
   "pos": {
     "title": "POS Terminal",

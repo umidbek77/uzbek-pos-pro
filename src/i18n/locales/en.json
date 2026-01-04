@@ -96,7 +96,9 @@
     "recentTransactions": "Recent Transactions",
     "salesTrend": "Sales Trend",
     "lowStock": "Low Stock Alerts",
-    "quickActions": "Quick Actions"
+    "quickActions": "Quick Actions",
+    "monthlyProfit": "Monthly Profit",
+    "subtitle": "Here's what's happening with your store today."
   },
   "pos": {
     "title": "POS Terminal",

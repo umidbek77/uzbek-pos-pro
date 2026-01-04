@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -25,12 +25,13 @@ import {
     Select,
     FormControl,
     SelectChangeEvent,
-    Dialog,
-    TextField,
-    InputAdornment,
     Paper,
     ListItemAvatar,
-    Button, DialogContent,
+    Button,
+    Dialog,
+    DialogContent,
+    TextField,
+    InputAdornment,
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -66,6 +67,7 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import LanguageIcon from '@mui/icons-material/Language';
 
 import { useAuthStore } from '@/stores/authStore';
+import CommandPalette from '@/components/CommandPalette';
 import { useThemeStore } from '@/stores/themeStore';
 import { useBranchStore } from '@/stores/branchStore';
 import { supabase } from '@/integrations/supabase/client';
@@ -90,13 +92,6 @@ interface Notification {
     read: boolean;
 }
 
-interface SearchResult {
-    id: string;
-    title: string;
-    type: 'product' | 'customer' | 'transaction';
-    path: string;
-    description: string;
-}
 
 const DashboardLayout: React.FC = () => {
     const { t, i18n } = useTranslation();
@@ -115,8 +110,20 @@ const DashboardLayout: React.FC = () => {
     const [langAnchorEl, setLangAnchorEl] = useState<null | HTMLElement>(null);
     const langMenuOpen = Boolean(langAnchorEl);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
-    const [searchOpen, setSearchOpen] = useState(false);
+    const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+
+    // Ctrl+K keyboard shortcut for command palette
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                setCommandPaletteOpen(true);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
 
     // Mock Notifications
     const [notifications, setNotifications] = useState<Notification[]>([
@@ -146,14 +153,6 @@ const DashboardLayout: React.FC = () => {
         },
     ]);
 
-    // Mock Search Results
-    const mockSearchResults: SearchResult[] = [
-        { id: '1', title: 'iPhone 15 Pro Max', type: 'product', path: '/products', description: 'Electronics' },
-        { id: '2', title: 'Aziz Karimov', type: 'customer', path: '/customers', description: 'Premium Customer' },
-        { id: '3', title: 'Transaction #1234', type: 'transaction', path: '/transactions', description: '12,450,000 UZS' },
-        { id: '4', title: 'Samsung Galaxy S24', type: 'product', path: '/products', description: 'Electronics' },
-        { id: '5', title: 'Malika Usmanova', type: 'customer', path: '/customers', description: 'VIP Customer' },
-    ];
 
     const navItems: NavItem[] = [
         { key: 'dashboard', icon: <DashboardIcon sx={{ color: ICON_COLOR }} />, path: '/dashboard' },
@@ -241,15 +240,6 @@ const DashboardLayout: React.FC = () => {
         setNotifications([]);
     };
 
-    const getSearchResults = (query: string): SearchResult[] => {
-        if (!query.trim()) return [];
-        return mockSearchResults.filter(item =>
-            item.title.toLowerCase().includes(query.toLowerCase()) ||
-            item.description.toLowerCase().includes(query.toLowerCase())
-        );
-    };
-
-    const searchResults = getSearchResults(searchQuery);
     const unreadCount = notifications.filter(n => !n.read).length;
 
     const isActive = (path: string) =>
@@ -273,18 +263,6 @@ const DashboardLayout: React.FC = () => {
         }
     };
 
-    const getSearchIcon = (type: string) => {
-        switch (type) {
-            case 'product':
-                return <InventoryIcon />;
-            case 'customer':
-                return <PeopleIcon />;
-            case 'transaction':
-                return <ReceiptIcon />;
-            default:
-                return <InfoIcon />;
-        }
-    };
 
     const drawer = (
         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -439,8 +417,8 @@ const DashboardLayout: React.FC = () => {
                         </IconButton>
                     </Tooltip>
 
-                    <Tooltip title="Search">
-                        <IconButton color="inherit" sx={{ ml: 1 }} onClick={() => setSearchOpen(true)}>
+                    <Tooltip title="Search (⌘K)">
+                        <IconButton color="inherit" sx={{ ml: 1 }} onClick={() => setCommandPaletteOpen(true)}>
                             <SearchIcon sx={{ color: ICON_COLOR }}/>
                         </IconButton>
                     </Tooltip>
@@ -556,75 +534,8 @@ const DashboardLayout: React.FC = () => {
                 </Paper>
             )}
 
-            {/* Search Dialog */}
-            <Dialog
-                open={searchOpen}
-                onClose={() => {
-                    setSearchOpen(false);
-                    setSearchQuery('');
-                }}
-                fullWidth
-                maxWidth="sm"
-                PaperProps={{ sx: { mt: -4 } }}
-            >
-                <DialogContent sx={{ p: 0 }}>
-                    <TextField
-                        autoFocus
-                        fullWidth
-                        placeholder="Search products, customers, transactions..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                        }}
-                        sx={{
-                            '& fieldset': { border: 'none' },
-                            py: 2,
-                            px: 2,
-                        }}
-                    />
-                    <Divider />
-                    <List sx={{ maxHeight: 400, overflow: 'auto' }}>
-                        {searchResults.length > 0 ? (
-                            searchResults.map((result) => (
-                                <ListItemButton
-                                    key={result.id}
-                                    onClick={() => {
-                                        handleNavigation(result.path);
-                                        setSearchOpen(false);
-                                        setSearchQuery('');
-                                    }}
-                                    sx={{ borderBottom: '1px solid', borderColor: 'divider' }}
-                                >
-                                    <ListItemAvatar>
-                                        <Avatar sx={{ bgcolor: 'primary.light', color: 'primary.main' }}>
-                                            {getSearchIcon(result.type)}
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary={result.title}
-                                        secondary={result.description}
-                                    />
-                                </ListItemButton>
-                            ))
-                        ) : searchQuery ? (
-                            <Box sx={{ p: 3, textAlign: 'center' }}>
-                                <Typography color="text.secondary">No results found</Typography>
-                            </Box>
-                        ) : (
-                            <Box sx={{ p: 3, textAlign: 'center' }}>
-                                <Typography color="text.secondary" variant="body2">
-                                    Start typing to search...
-                                </Typography>
-                            </Box>
-                        )}
-                    </List>
-                </DialogContent>
-            </Dialog>
+            {/* Command Palette */}
+            <CommandPalette open={commandPaletteOpen} onClose={() => setCommandPaletteOpen(false)} />
 
             <Box
                 component="nav"
