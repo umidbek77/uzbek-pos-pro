@@ -140,14 +140,16 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon, color, 
   );
 };
 
-const formatPrice = (price: number) => {
-  if (price >= 1000000) {
-    return `${(price / 1000000).toFixed(1)}M UZS`;
+const formatPrice = (price: number, compact = false) => {
+  if (compact) {
+    if (price >= 1000000) {
+      return `${(price / 1000000).toFixed(1)}M UZS`;
+    }
+    if (price >= 1000) {
+      return `${(price / 1000).toFixed(0)}K UZS`;
+    }
   }
-  if (price >= 1000) {
-    return `${(price / 1000).toFixed(0)}K UZS`;
-  }
-  return `${price.toLocaleString()} UZS`;
+  return new Intl.NumberFormat('uz-UZ').format(price) + ' UZS';
 };
 
 const DashboardPage: React.FC = () => {
@@ -182,7 +184,7 @@ const DashboardPage: React.FC = () => {
   const stats = [
     {
       title: t('dashboard.todaySales'),
-      value: formatPrice(todayMetrics?.totalRevenue || 0),
+      value: formatPrice(todayMetrics?.totalRevenue || 0, true),
       icon: <MoneyIcon />,
       color: theme.palette.primary.main,
       loading: loadingToday,
@@ -196,14 +198,14 @@ const DashboardPage: React.FC = () => {
     },
     {
       title: t('dashboard.averageOrder'),
-      value: formatPrice(todayMetrics?.averageOrderValue || 0),
+      value: formatPrice(todayMetrics?.averageOrderValue || 0, true),
       icon: <ReceiptIcon />,
       color: theme.palette.warning.main,
       loading: loadingToday,
     },
     {
       title: t('dashboard.monthlyProfit'),
-      value: formatPrice(monthMetrics?.totalProfit || 0),
+      value: formatPrice(monthMetrics?.totalProfit || 0, true),
       icon: <TrendIcon />,
       color: theme.palette.info.main,
       loading: loadingMonth,
