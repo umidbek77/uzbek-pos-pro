@@ -246,6 +246,42 @@ const POSPage: React.FC = () => {
     [products, addToCart, enqueueSnackbar, t]
   );
 
+  // Global barcode scanner listener - listens for keyboard input
+  useEffect(() => {
+    let barcodeBuffer = '';
+    let lastKeyTime = 0;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if focus is on an input field (except barcode input)
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        if (target !== barcodeInputRef.current) {
+          return;
+        }
+      }
+
+      const currentTime = Date.now();
+      
+      // Reset buffer if more than 100ms between keystrokes (barcode scanners are fast)
+      if (currentTime - lastKeyTime > 100) {
+        barcodeBuffer = '';
+      }
+      lastKeyTime = currentTime;
+
+      if (e.key === 'Enter' && barcodeBuffer.length >= 3) {
+        // Process barcode
+        handleBarcodeScan(barcodeBuffer);
+        barcodeBuffer = '';
+        e.preventDefault();
+      } else if (e.key.length === 1 && /^[a-zA-Z0-9-]$/.test(e.key)) {
+        barcodeBuffer += e.key;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleBarcodeScan]);
+
   // Handle barcode input keypress
   const handleBarcodeKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {

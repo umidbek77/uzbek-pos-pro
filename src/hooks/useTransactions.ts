@@ -262,6 +262,64 @@ export function useCreateTransaction() {
         });
       }
 
+      // Update customer cashback if customer is present
+      if (data.customerId) {
+        // Get current customer data
+        const { data: customer } = await supabase
+          .from('customers')
+          .select('cashback_balance, total_spent, total_orders')
+          .eq('id', data.customerId)
+          .single();
+
+        if (customer) {
+          // Calculate cashback earned (2% of total amount)
+          const cashbackEarned = Math.floor(totalAmount * 0.02);
+          const newCashbackBalance = (Number(customer.cashback_balance) || 0) - cashbackUsed + cashbackEarned;
+          const newTotalSpent = (Number(customer.total_spent) || 0) + totalAmount;
+          const newTotalOrders = (Number(customer.total_orders) || 0) + 1;
+
+          // Update customer
+          await supabase
+            .from('customers')
+            .update({
+              cashback_balance: newCashbackBalance,
+              total_spent: newTotalSpent,
+              total_orders: newTotalOrders,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', data.customerId);
+
+          // Log cashback history if cashback was used or earned
+          if (cashbackUsed > 0) {
+            await supabase.from('cashback_history').insert({
+              customer_id: data.customerId,
+              transaction_id: transaction.id,
+              type: 'used',
+              amount: -cashbackUsed,
+              balance_after: newCashbackBalance,
+              notes: `Used for transaction ${transactionNumber}`,
+            });
+          }
+
+          if (cashbackEarned > 0) {
+            await supabase.from('cashback_history').insert({
+              customer_id: data.customerId,
+              transaction_id: transaction.id,
+              type: 'earned',
+              amount: cashbackEarned,
+              balance_after: newCashbackBalance,
+              notes: `Earned from transaction ${transactionNumber}`,
+            });
+          }
+
+          // Update transaction with earned cashback
+          await supabase
+            .from('transactions')
+            .update({ cashback_earned: cashbackEarned })
+            .eq('id', transaction.id);
+        }
+      }
+
       return transaction;
     },
     onSuccess: () => {
