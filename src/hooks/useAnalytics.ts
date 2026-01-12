@@ -151,7 +151,7 @@ export function useTodaySalesMetrics(branchId?: string) {
       
       // If no data today, get the most recent day with data
       if (!data || data.length === 0) {
-        const lastQuery = supabase
+        let lastQuery = supabase
           .from('transactions')
           .select(`
             id,
@@ -173,7 +173,7 @@ export function useTodaySalesMetrics(branchId?: string) {
           .limit(50);
         
         if (branchId) {
-          query = query.eq('branch_id', branchId);
+          lastQuery = lastQuery.eq('branch_id', branchId);
         }
         
         const lastResult = await lastQuery;
@@ -265,7 +265,7 @@ export function useMonthSalesMetrics(branchId?: string) {
       
       // If no data this month, get the last 30 days of available data
       if (!data || data.length === 0) {
-        const last30Query = supabase
+        let last30Query = supabase
           .from('transactions')
           .select(`
             id,
@@ -287,7 +287,7 @@ export function useMonthSalesMetrics(branchId?: string) {
           .limit(200);
         
         if (branchId) {
-          query = query.eq('branch_id', branchId);
+          last30Query = last30Query.eq('branch_id', branchId);
         }
         
         const lastResult = await last30Query;
@@ -348,7 +348,7 @@ export function useHourlySales(date: Date, branchId?: string) {
       
       // If no data for this date, get the most recent day with data
       if (!data || data.length === 0) {
-        const lastQuery = supabase
+        let lastQuery = supabase
           .from('transactions')
           .select('created_at, total_amount')
           .eq('status', 'completed')
@@ -356,7 +356,7 @@ export function useHourlySales(date: Date, branchId?: string) {
           .limit(100);
         
         if (branchId) {
-          query = query.eq('branch_id', branchId);
+          lastQuery = lastQuery.eq('branch_id', branchId);
         }
         
         const lastResult = await lastQuery;
@@ -579,9 +579,8 @@ export function useTopProducts(startDate: Date, endDate: Date, limit: number = 1
       let { data, error } = await query;
       if (error) throw error;
       
-      // If no data in date range, fetch all available data
       if (!data || data.length === 0) {
-        const allDataQuery = supabase
+        let allDataQuery = supabase
           .from('transaction_items')
           .select(`
             product_id,
@@ -598,7 +597,7 @@ export function useTopProducts(startDate: Date, endDate: Date, limit: number = 1
           .eq('transactions.status', 'completed');
         
         if (branchId) {
-          query = query.eq('transactions.branch_id', branchId);
+          allDataQuery = allDataQuery.eq('transactions.branch_id', branchId);
         }
         
         const allResult = await allDataQuery;
@@ -763,7 +762,7 @@ export function useRevenueByCategory(startDate: Date, endDate: Date, branchId?: 
       
       // If no data in range, fetch all available data
       if (!data || data.length === 0) {
-        const allDataQuery = supabase
+        let allDataQuery = supabase
           .from('transaction_items')
           .select(`
             product_id,
@@ -784,7 +783,7 @@ export function useRevenueByCategory(startDate: Date, endDate: Date, branchId?: 
           .eq('transactions.status', 'completed');
         
         if (branchId) {
-          query = query.eq('transactions.branch_id', branchId);
+          allDataQuery = allDataQuery.eq('transactions.branch_id', branchId);
         }
         
         const allResult = await allDataQuery;
